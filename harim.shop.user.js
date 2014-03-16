@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name       Harim Shop Improvements
+// @name        Harim Shop Improvements
 // @description Adds Read/Unread to the harim page listing and an ability to make items favorite
-// @namespace  http://www.harim.co.il/Yad2/marketprodlist.asp
-// @version    0.3
-// @description  enter something useful
-// @match      http://www.harim.co.il/Yad2/*
-// @match      http://www.harim.co.il/yad2/*
+// @namespace   http://www.harim.co.il/Yad2/marketprodlist.asp
+// @version     0.3
+// @updateURL   https://github.com/kostyay/stuff/raw/master/harim.shop.user.js
+// @match       http://www.harim.co.il/Yad2/*
+// @match       http://www.harim.co.il/yad2/*
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_log
-// @copyright  2014, Kostya Yegorov
+// @copyright   2014, Kostya Yegorov
 // ==/UserScript==
 
 

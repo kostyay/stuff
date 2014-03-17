@@ -41,6 +41,7 @@ unsafeWindow.hideElements = function() {
 	for (i = 0; i < parents.length; i++) { jQ(parents[i]).attr("width", "100%"); }    
     
     jQ(main_table).attr("width", "90%")
+    jQ(main_table).attr("id", "main_table_element")
     
     jQ("#marq").closest("tr").remove()
 
@@ -55,25 +56,32 @@ unsafeWindow.hideElements = function() {
 
 var originalShowHideItem = ShowHideItem
 function ShowHideItem_hook(id) {
-    key = getKeyName(id);
-    view_count = GM_getValue(key, 0);
-    GM_setValue(key, view_count + 1);
-    markItemRead(itemById(id));
-    
-    
+    readItem(id);
+        
     originalShowHideItem(id)
 }
 ShowHideItem = ShowHideItem_hook
+
+function readItem(id) {
+    key = getKeyName(id);
+    view_count = GM_getValue(key, 0);
+    GM_setValue(key, view_count + 1);
+    
+    GM_log('Setting ' + id + ' count to ' + GM_getValue(key, 0))
+    markItemReadStyle(itemById(id));
+}
 
 function getKeyName(id) {
     return 'bike_' + id;
 }
 
 function wasItemRead(id) {
-    return GM_getValue(getKeyName(id), 0) > 0;
+    key = getKeyName(id)
+    GM_log('Viewcount for ' + id + ' is ' + GM_getValue(key, 0))
+    return GM_getValue(key, 0) > 0;
 }
 
-function markItemRead(elem) {
+function markItemReadStyle(elem) {
     elem.css('font-weight', 'normal')
 }
 
@@ -86,6 +94,11 @@ function itemById(id) {
 }
 
 function markReadItems() {
+    
+    // add mark all read button
+    jQ("#main_table_element").prepend("<input type=\"button\" value=\"Mark all read\" onClick=\"javascript:markAllRead()\">");
+    
+    
     items = jQ("[id^=TR\0-9+]");
     for (i = 0; i < items.length; i++) {
         elem = jQ(items[i]);
@@ -95,12 +108,20 @@ function markReadItems() {
         elem.append("<td><input type=\"button\" value=\"F\" onClick=\"javascript:favoriteItem("+id+")\"></td>");
         
         if (wasItemRead(id)) {
-            markItemRead(elem);
+            markItemReadStyle(elem);
         } else {
             markItemUnread(elem);
         }
         
         markItemFavorite(id);
+    }
+}
+
+function markAllRead() {
+    items = jQ("[id^=TR\0-9+]");
+    for (i = 0; i < items.length; i++) {
+        elem = jQ(items[i]);
+        readItem(elem.attr('id').substring(2));
     }
 }
 
@@ -129,6 +150,7 @@ function isFavoriteItem(id) {
 
 unsafeWindow.markReadItems = markReadItems;
 unsafeWindow.favoriteItem = favoriteItem;
+unsafeWindow.markAllRead = markAllRead;
 
 // the guts of this userscript
 function main() {

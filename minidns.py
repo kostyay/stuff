@@ -11,7 +11,6 @@
 # -----------------------------
 import sys
 import socket
-import fcntl
 import struct
 
 # -----------------------------

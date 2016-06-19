@@ -2,7 +2,7 @@
 // @name        Harim Shop Improvements
 // @description Adds Read/Unread to the harim page listing and an ability to make items favorite
 // @namespace   http://www.harim.co.il/Yad2/marketprodlist.asp
-// @version     0.3
+// @version     0.4
 // @updateURL   https://github.com/kostyay/stuff/raw/master/harim.shop.user.js
 // @match       http://www.harim.co.il/Yad2/*
 // @match       http://www.harim.co.il/yad2/*
@@ -26,49 +26,41 @@ function addJQuery(callback) {
 }
 
 unsafeWindow.hideElements = function() {
-
     //ad_rows
-    
+
     items_table = jQ("#1itembody").closest("table");
-    
+
     // hide the ads
     jQ(jQ("table[name=mainmenu]")[2]).css('display', 'none');
 
-	// expand the tables    
+	// expand the tables
     jQ("td[width=758]").attr("width", "100%");
     main_table = jQ("table[width=894]");
     jQ("td[width=120]").remove();
-    
+
     parents = jQ(".1reg").parents("table");
-	for (i = 0; i < parents.length; i++) { jQ(parents[i]).attr("width", "100%"); }    
-    
+	for (i = 0; i < parents.length; i++) { jQ(parents[i]).attr("width", "100%"); }
+
     jQ(main_table).attr("width", "90%");
     jQ(main_table).attr("id", "main_table_element");
-    
-    jQ("#marq").closest("tr").remove();
 
-    //jQ("td[colspan=13]").closest("tr").remove()
-    //jQ(jQ("img[alt=099503332]").closest("tr")).remove()
-    
-	// remove the "edit" column
-    //alert("going to hide")
-	//jQ(items_table).find("td:nth-child(12)").hide()
-    //jQ(items_table).find("td:nth-child(11)").hide()
-}
+    jQ("#marq").closest("tr").remove();
+};
 
 var originalShowHideItem = ShowHideItem;
 function ShowHideItem_hook(id) {
     readItem(id);
-        
+
     originalShowHideItem(id);
 }
+
 ShowHideItem = ShowHideItem_hook;
 
 function readItem(id) {
     key = getKeyName(id);
     view_count = GM_getValue(key, 0);
     GM_setValue(key, view_count + 1);
-    
+
     GM_log('Setting ' + id + ' count to ' + GM_getValue(key, 0));
     markItemReadStyle(itemById(id));
 }
@@ -96,25 +88,31 @@ function itemById(id) {
 }
 
 function markReadItems() {
-    
+
     // add mark all read button
     jQ("#main_table_element").prepend("<input type=\"button\" value=\"Mark all read\" onClick=\"javascript:markAllRead()\">");
-    
-    
+
     items = jQ("[id^=TR]");
     for (i = 0; i < items.length; i++) {
         elem = jQ(items[i]);
         id = elem.attr('id').substring(2);
-        
+
+        has_image = jQ("img[src='/yad2/yad2_camera.gif']", elem);
+        if (has_image.length !== 0) {
+            elem.append('<td style="text-align: center"><img src="/yad2/GetResizeImage.asp?ID='+id+'"></td>');
+        } else {
+            elem.append('<td></td>');
+        }
+
         // add favorites button
         elem.append("<td><input type=\"button\" value=\"F\" onClick=\"javascript:favoriteItem("+id+")\"></td>");
-        
+
         if (wasItemRead(id)) {
             markItemReadStyle(elem);
         } else {
             markItemUnread(elem);
         }
-        
+
         markItemFavorite(id);
     }
 }
@@ -128,20 +126,20 @@ function markAllRead() {
 }
 
 function markItemFavorite(id) {
-    elem = jQ("#TR" + id)
+    elem = jQ("#TR" + id);
     if (isFavoriteItem(id)) {
     	elem.css('color', 'green');
-    	elem.css('font-size', '14px');        
+    	elem.css('font-size', '14px');
     } else {
-    	elem.css('color', 'black');        
-        elem.css('font-size', '12px');        
+    	elem.css('color', 'black');
+        elem.css('font-size', '12px');
     }
 }
 
 function favoriteItem(id) {
     key = 'fav_' + id;
     GM_setValue(key, !isFavoriteItem(id));
-    
+
 	markItemFavorite(id);
 }
 
@@ -158,12 +156,12 @@ unsafeWindow.markAllRead = markAllRead;
 function main() {
   // Note, jQ replaces $ to avoid conflicts.
   //alert("There are " + jQ('a').length + " links on this page.");
-    
+
     // hide the ads
-    hideElements()    
-    
+    hideElements();
+
     // read items
-    markReadItems()
+    markReadItems();
 }
 
 // load jQuery and execute the main function

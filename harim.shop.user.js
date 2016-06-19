@@ -118,7 +118,7 @@ function markReadItems() {
 }
 
 function markAllRead() {
-    items = jQ("[id^=TR\0-9+]");
+    items = jQ("[id^=TR]");
     for (i = 0; i < items.length; i++) {
         elem = jQ(items[i]);
         readItem(elem.attr('id').substring(2));

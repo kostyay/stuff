@@ -2,9 +2,8 @@
 // @name        Facebook Post Seen Count
 // @description Add seen count to facebook group posts
 // @namespace   http://www.harim.co.il/Yad2/marketprodlist.asp
-// @version     0.1
+// @version     0.1.2
 // @match       https://www.facebook.com/*
-// @updateURL   https://github.com/kostyay/stuff/raw/master/facebook.post_seen_count.user.js
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_log
@@ -34,6 +33,10 @@ function isRelevantElem(elem) {
     }
     
     if (elem.querySelector('.fbViewCount')) {
+        return false;
+    }
+    
+    if (!$(elem).data('ft').mf_story_key) {
         return false;
     }
     

@@ -3,7 +3,7 @@
 // @description Add seen count to facebook group posts
 // @namespace   http://www.harim.co.il/Yad2/marketprodlist.asp
 // @version     0.1
-// @match       https://www.facebook.com/*
+// @match       https://www.facebook.com/groups/*
 // @updateURL   https://github.com/kostyay/stuff/raw/master/facebook.post_seen_count.user.js
 // @grant       GM_getValue
 // @grant       GM_setValue

@@ -2,7 +2,7 @@
 // @name        Facebook Post Seen Count
 // @description Add seen count to facebook group posts
 // @namespace   http://www.harim.co.il/Yad2/marketprodlist.asp
-// @version     0.3
+// @version     0.3.1
 // @match       https://www.facebook.com/*
 // @grant       GM_getValue
 // @grant       GM_setValue
@@ -11,6 +11,8 @@
 // @require http://code.jquery.com/jquery-latest.js
 // @require https://greasyfork.org/scripts/19857-node-creation-observer/code/node-creation-observer.js?version=126895
 // ==/UserScript==
+
+var relevant_elements_selector = '#pagelet_group_ div.mbm[data-ft]';
 
 var DEBUG = false;
 function log(s) {
@@ -69,7 +71,7 @@ function processViewCount(elem) {
 }
 
 function hookExisting() {
-    var elems = document.querySelectorAll('div.mbm[data-ft]');
+    var elems = document.querySelectorAll(relevant_elements_selector);
     for (i = 0; i < elems.length; i++) {
         processViewCount(elems[i]);
     }
@@ -80,7 +82,7 @@ function main() {
   log('== Facebook View Count ==');
   hookExisting();
     
-   NodeCreationObserver.onCreation('div.mbm[data-ft]', function (element) {
+   NodeCreationObserver.onCreation(relevant_elements_selector, function (element) {
       processViewCount(element);
   });
 }

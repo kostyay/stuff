@@ -2,7 +2,7 @@
 // @name        Facebook Post Seen Count
 // @description Add seen count to facebook group posts
 // @namespace   http://www.harim.co.il/Yad2/marketprodlist.asp
-// @version     0.1.2
+// @version     0.3
 // @match       https://www.facebook.com/*
 // @grant       GM_getValue
 // @grant       GM_setValue
@@ -36,11 +36,22 @@ function isRelevantElem(elem) {
         return false;
     }
     
-    if (!$(elem).data('ft').mf_story_key) {
+    if (!getPostId(elem)) {
         return false;
     }
     
     return true;
+}
+
+function getPostId(elem) {
+    var ft_data = $(elem).data('ft');
+    if (ft_data.mf_story_key) {
+        return ft_data.mf_story_key;
+    } else if (ft_data.top_level_post_id) {
+        return ft_data.top_level_post_id;
+    } else {
+        return null;
+    }
 }
 
 function processViewCount(elem) {
@@ -48,7 +59,7 @@ function processViewCount(elem) {
         return false;
     }
     
-    var qid = $(elem).data('ft').mf_story_key;
+    var qid = getPostId(elem);
     
     var contentElem = elem.querySelector('.userContent');
     var viewCount = GM_getValue(itemKey(qid), 0);

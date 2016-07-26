@@ -2,7 +2,7 @@
 // @name        Facebook Post Seen Count
 // @description Add seen count to facebook group posts
 // @namespace   http://www.harim.co.il/Yad2/marketprodlist.asp
-// @version     0.3.1
+// @version     0.3.2
 // @match       https://www.facebook.com/*
 // @grant       GM_getValue
 // @grant       GM_setValue
@@ -12,7 +12,7 @@
 // @require https://greasyfork.org/scripts/19857-node-creation-observer/code/node-creation-observer.js?version=126895
 // ==/UserScript==
 
-var relevant_elements_selector = '#pagelet_group_ div.mbm[data-ft]';
+var relevant_elements_selector = "div[id^='pagelet_group_'] div.mbm[data-ft]";
 
 var DEBUG = false;
 function log(s) {
